@@ -1,24 +1,4 @@
-const shortWords = ["car", "cat", "pear", "deer", "lung", "wing"];
-const mediumWords = [
-  "bottle",
-  "spatula",
-  "hammer",
-  "window",
-  "circle",
-  "tomato",
-  "compass",
-  "victory",
-];
-const longWords = [
-  "computer",
-  "watermelon",
-  "pineapple",
-  "wardrobe",
-  "aeroplane",
-  "language",
-  "rectangle",
-  "icecream",
-];
+import { shortWords, mediumWords, longWords } from "./words.js";
 
 const alpha = Array.from(Array(26)).map((e, i) => i + 65);
 const alphabet = alpha.map((x) => String.fromCharCode(x));
@@ -85,11 +65,16 @@ const gameOver = (hasEnded) => {
   gameOverModal.appendChild(resetGameButton);
 };
 
-const livesRemainingCounter = (maxMistakes, tries) => {
+const livesRemainingCounter = (maxMistakes, tries = 0) => {
   const livesRemaining = document.createElement("p");
   livesRemaining.id = "lives";
-  livesRemaining.innerText = `Lives remainig: ${maxMistakes}`;
+  livesRemaining.innerText = `Lives remainig: ${maxMistakes - tries}`;
   gameWindow.appendChild(livesRemaining);
+};
+
+const livesUpdater = (maxMistakes, tries) => {
+  const livesRemaining = document.getElementById("lives");
+  livesRemaining.innerText = `Lives remainig: ${maxMistakes - tries}`;
 };
 
 const letterClick = (letter) => {
@@ -103,6 +88,7 @@ const letterClick = (letter) => {
     correctGuess === secretWord.length ? gameOver(true) : null;
   } else {
     tries += 1;
+    livesUpdater(maxMistakes, tries);
     tries === maxMistakes ? gameOver(false) : null;
   }
 };
@@ -137,9 +123,7 @@ games.forEach(function (button) {
     gameOptions.classList.add("hidden");
     gameWindow.classList.remove("hidden");
     console.log(secretWord.length, secretWord);
-
     livesRemainingCounter(maxMistakes);
-    console.log("AFAF");
     wordPlaceholder(secretWord);
   });
 });
