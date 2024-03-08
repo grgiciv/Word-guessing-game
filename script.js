@@ -12,11 +12,10 @@ gameWindow.classList.add("hidden");
 let secretWord,
   maxMistakes,
   correctGuess = 0,
-  tries = 0;
+  tries = 0,
+  guessedLetters = [];
 
 const games = document.querySelectorAll(".btn");
-
-// Treba napravit counter pokusaja i animaciju za game over
 
 const wordPlaceholder = (word) => {
   const wordWrapper = document.createElement("div");
@@ -55,6 +54,7 @@ const gameOver = (hasEnded) => {
     document.body.removeChild(gameOverModal);
     correctGuess = 0;
     tries = 0;
+    guessedLetters = [];
     gameOptions.classList.remove("hidden");
     gameWindow.classList.add("hidden");
     const word = document.querySelector(".wordWrapper");
@@ -79,13 +79,18 @@ const livesUpdater = (maxMistakes, tries) => {
 
 const letterClick = (letter) => {
   if (secretWord.includes(letter)) {
+    let character = secretWord.split("").filter((char) => char === letter);
+    guessedLetters.push(character);
+
     correctGuess += 1;
     const letterGuessed = document.querySelectorAll("div.letter");
     for (let i = 0; i < letterGuessed.length; i++) {
       if (letterGuessed[i].innerText === letter)
         letterGuessed[i].classList.remove("hidden");
     }
-    correctGuess === secretWord.length ? gameOver(true) : null;
+    secretWord.split("").sort().join() === guessedLetters.flat().sort().join()
+      ? gameOver(true)
+      : null;
   } else {
     tries += 1;
     livesUpdater(maxMistakes, tries);
