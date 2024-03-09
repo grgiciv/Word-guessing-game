@@ -44,19 +44,23 @@ const gameOver = (hasEnded) => {
   hasEnded ? (title.innerText = "You win!") : "You lose!";
   gameOverModal.appendChild(title);
   const score = document.createElement("p");
-  hasEnded
-    ? (score.innerText = `You have won the game with ${tries} mistakes. \n CONGRATULATIONS!!!`)
-    : (score.innerText = `You have lost the game! \nTry to guess the word with less than ${maxMistakes} mistakes`);
+  if (hasEnded) {
+    score.innerText = `You have won the game with ${tries} mistakes. \n CONGRATULATIONS!!!`;
+    gameWindow.classList.add("hidden");
+  } else {
+    score.innerText = `You have lost the game! \nTry to guess the word with less than ${maxMistakes} mistakes`;
+  }
   gameOverModal.appendChild(score);
   const resetGameButton = document.createElement("button");
   resetGameButton.innerText = "Try again";
   resetGameButton.addEventListener("click", () => {
+    let letterButtons = document.querySelectorAll(".letterButton");
+    letterButtons.forEach((button) => (button.disabled = false));
     document.body.removeChild(gameOverModal);
     correctGuess = 0;
     tries = 0;
     guessedLetters = [];
     gameOptions.classList.remove("hidden");
-    gameWindow.classList.add("hidden");
     const word = document.querySelector(".wordWrapper");
     const lives = document.querySelector("#lives");
     lives.remove();
@@ -77,17 +81,18 @@ const livesUpdater = (maxMistakes, tries) => {
   livesRemaining.innerText = `Lives remainig: ${maxMistakes - tries}`;
 };
 
-const letterClick = (letter) => {
+const letterClick = (letter, button) => {
+  button.innerText === letter ? (button.disabled = true) : null;
   if (secretWord.includes(letter)) {
     let character = secretWord.split("").filter((char) => char === letter);
     guessedLetters.push(character);
-
     correctGuess += 1;
     const letterGuessed = document.querySelectorAll("div.letter");
     for (let i = 0; i < letterGuessed.length; i++) {
       if (letterGuessed[i].innerText === letter)
         letterGuessed[i].classList.remove("hidden");
     }
+
     secretWord.split("").sort().join() === guessedLetters.flat().sort().join()
       ? gameOver(true)
       : null;
@@ -101,9 +106,11 @@ const letterClick = (letter) => {
 const alphabetKeyboard = (alphabet) => {
   for (let i = 0; i < alphabet.length; i++) {
     const letter = document.createElement("button");
-    letter.classList.add("letterPlacholder");
+    letter.classList.add("letterButton");
     letter.innerText = alphabet[i];
-    letter.addEventListener("click", (e) => letterClick(e.target.innerText));
+    letter.addEventListener("click", (e) =>
+      letterClick(e.target.innerText, letter)
+    );
     alphabetBox.append(letter);
   }
 };
@@ -113,17 +120,17 @@ games.forEach(function (button) {
     if (button.id === "easy") {
       secretWord =
         shortWords[Math.floor(Math.random() * shortWords.length)].toUpperCase();
-      maxMistakes = 5;
+      maxMistakes = 8;
     } else if (button.id === "medium") {
       secretWord =
         mediumWords[
           Math.floor(Math.random() * shortWords.length)
         ].toUpperCase();
-      maxMistakes = 7;
+      maxMistakes = 10;
     } else {
       secretWord =
         longWords[Math.floor(Math.random() * shortWords.length)].toUpperCase();
-      maxMistakes = 9;
+      maxMistakes = 12;
     }
     gameOptions.classList.add("hidden");
     gameWindow.classList.remove("hidden");
