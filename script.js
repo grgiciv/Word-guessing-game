@@ -5,7 +5,6 @@ const alphabet = alpha.map((x) => String.fromCharCode(x));
 
 const gameWindow = document.querySelector(".gameWindow");
 const gameOptions = document.querySelector(".options");
-const alphabetBox = document.querySelector(".alphabet");
 
 gameWindow.classList.add("hidden");
 
@@ -54,6 +53,8 @@ const gameOver = (hasEnded) => {
   const resetGameButton = document.createElement("button");
   resetGameButton.innerText = "Try again";
   resetGameButton.addEventListener("click", () => {
+    let alphabetBox = document.querySelector(".alphabet");
+    gameWindow.removeChild(alphabetBox);
     let letterButtons = document.querySelectorAll(".letterButton");
     letterButtons.forEach((button) => (button.disabled = false));
     document.body.removeChild(gameOverModal);
@@ -104,6 +105,8 @@ const letterClick = (letter, button) => {
 };
 
 const alphabetKeyboard = (alphabet) => {
+  const alphabetBox = document.createElement("div");
+  alphabetBox.classList.add("alphabet");
   for (let i = 0; i < alphabet.length; i++) {
     const letter = document.createElement("button");
     letter.classList.add("letterButton");
@@ -113,6 +116,7 @@ const alphabetKeyboard = (alphabet) => {
     );
     alphabetBox.append(letter);
   }
+  gameWindow.appendChild(alphabetBox);
 };
 
 games.forEach(function (button) {
@@ -137,7 +141,6 @@ games.forEach(function (button) {
     console.log(secretWord.length, secretWord);
     livesRemainingCounter(maxMistakes);
     wordPlaceholder(secretWord);
+    alphabetKeyboard(alphabet);
   });
 });
-
-alphabetKeyboard(alphabet);
