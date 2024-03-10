@@ -8,9 +8,9 @@
   </head>
   <body>
     <h1>Welcome to the word guessing game</h1>
-    <div class="options">
+    <div class="flex">
       <h2>Select your difficulty:</h2>
-      <ul>
+      <ul class="flex" id="options">
         <li>
           <button id="easy" class="btn">
             Easy - randomly selects one short word
@@ -28,7 +28,7 @@
         </li>
       </ul>
     </div>
-    <div class="gameWindow"></div>
+    <div class="flex gameWindow" id="gameWindow"></div>
     <script src="./script.js" type="module"></script>
   </body>
 </html>
