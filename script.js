@@ -3,8 +3,8 @@ import { shortWords, mediumWords, longWords } from "./words.js";
 const alpha = Array.from(Array(26)).map((e, i) => i + 65);
 const alphabet = alpha.map((x) => String.fromCharCode(x));
 
-const gameWindow = document.querySelector(".gameWindow");
-const gameOptions = document.querySelector(".options");
+const gameWindow = document.querySelector("#gameWindow");
+const gameOptions = document.querySelector("#options");
 
 gameWindow.classList.add("hidden");
 
@@ -36,7 +36,7 @@ const wordPlaceholder = (word) => {
 
 const gameOver = (hasEnded) => {
   const gameOverModal = document.createElement("div");
-  gameOverModal.classList.add("overlay");
+  gameOverModal.classList.add("overlay", "flex");
 
   document.body.appendChild(gameOverModal);
   const title = document.createElement("h1");
@@ -83,8 +83,13 @@ const livesUpdater = (maxMistakes, tries) => {
 };
 
 const letterClick = (letter, button) => {
-  button.innerText === letter ? (button.disabled = true) : null;
+  if (button.innerText === letter) {
+    button.disabled = true;
+    button.style.backgroundColor = "rgb(197, 0, 0)";
+  }
+
   if (secretWord.includes(letter)) {
+    button.style.backgroundColor = "rgb(0, 197, 0)";
     let character = secretWord.split("").filter((char) => char === letter);
     guessedLetters.push(character);
     correctGuess += 1;
