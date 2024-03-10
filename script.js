@@ -37,7 +37,7 @@ const wordPlaceholder = (word) => {
 const gameOver = (hasEnded) => {
   const gameOverModal = document.createElement("div");
   gameOverModal.classList.add("overlay", "flex");
-
+  gameWindow.classList.add("hidden");
   document.body.appendChild(gameOverModal);
   const title = document.createElement("h1");
   hasEnded ? (title.innerText = "You win!") : "You lose!";
