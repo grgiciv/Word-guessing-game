@@ -35,39 +35,44 @@ const wordPlaceholder = (word) => {
 };
 
 const gameOver = (hasEnded) => {
-  const gameOverModal = document.createElement("div");
-  gameOverModal.classList.add("overlay", "flex");
-  gameWindow.classList.add("hidden");
-  document.body.appendChild(gameOverModal);
-  const title = document.createElement("h1");
-  hasEnded ? (title.innerText = "You win!") : "You lose!";
-  gameOverModal.appendChild(title);
-  const score = document.createElement("p");
-  if (hasEnded) {
-    score.innerText = `You have won the game with ${tries} mistakes. \n CONGRATULATIONS!!!`;
+  setTimeout(() => {
+    const gameOverModal = document.createElement("div");
+    gameOverModal.classList.add("overlay", "flex");
     gameWindow.classList.add("hidden");
-  } else {
-    score.innerText = `You have lost the game! \nTry to guess the word with less than ${maxMistakes} mistakes`;
-  }
-  gameOverModal.appendChild(score);
-  const resetGameButton = document.createElement("button");
-  resetGameButton.innerText = "Try again";
-  resetGameButton.addEventListener("click", () => {
-    let alphabetBox = document.querySelector(".alphabet");
-    gameWindow.removeChild(alphabetBox);
-    let letterButtons = document.querySelectorAll(".letterButton");
-    letterButtons.forEach((button) => (button.disabled = false));
-    document.body.removeChild(gameOverModal);
-    correctGuess = 0;
-    tries = 0;
-    guessedLetters = [];
-    gameOptions.classList.remove("hidden");
-    const word = document.querySelector(".wordWrapper");
-    const lives = document.querySelector("#lives");
-    lives.remove();
-    word.remove();
-  });
-  gameOverModal.appendChild(resetGameButton);
+    document.body.appendChild(gameOverModal);
+    const title = document.createElement("h1");
+    hasEnded ? (title.innerText = "You win!") : "You lose!";
+    gameOverModal.appendChild(title);
+    const score = document.createElement("p");
+    const answer = document.createElement("p");
+    if (hasEnded) {
+      score.innerText = `You have won the game with ${tries} mistakes. \n CONGRATULATIONS!!!`;
+      //gameWindow.classList.add("hidden");
+    } else {
+      answer.innerText = `The answer was ${secretWord}`;
+      score.innerText = `You have lost the game! \nTry to guess the word with less than ${maxMistakes} mistakes`;
+    }
+    gameOverModal.appendChild(answer);
+    gameOverModal.appendChild(score);
+    const resetGameButton = document.createElement("button");
+    resetGameButton.innerText = "Try again";
+    resetGameButton.addEventListener("click", () => {
+      let alphabetBox = document.querySelector(".alphabet");
+      gameWindow.removeChild(alphabetBox);
+      let letterButtons = document.querySelectorAll(".letterButton");
+      letterButtons.forEach((button) => (button.disabled = false));
+      document.body.removeChild(gameOverModal);
+      correctGuess = 0;
+      tries = 0;
+      guessedLetters = [];
+      gameOptions.classList.remove("hidden");
+      const word = document.querySelector(".wordWrapper");
+      const lives = document.querySelector("#lives");
+      lives.remove();
+      word.remove();
+    });
+    gameOverModal.appendChild(resetGameButton);
+  }, 1000);
 };
 
 const livesRemainingCounter = (maxMistakes, tries = 0) => {
@@ -79,7 +84,9 @@ const livesRemainingCounter = (maxMistakes, tries = 0) => {
 
 const livesUpdater = (maxMistakes, tries) => {
   const livesRemaining = document.getElementById("lives");
-  livesRemaining.innerText = `Lives remainig: ${maxMistakes - tries}`;
+  livesRemaining.innerText = `Lives remainig: ${
+    maxMistakes - tries < 0 ? 0 : maxMistakes - tries
+  }`;
 };
 
 const letterClick = (letter, button) => {
@@ -143,7 +150,6 @@ games.forEach(function (button) {
     }
     gameOptions.classList.add("hidden");
     gameWindow.classList.remove("hidden");
-    console.log(secretWord.length, secretWord);
     livesRemainingCounter(maxMistakes);
     wordPlaceholder(secretWord);
     alphabetKeyboard(alphabet);
