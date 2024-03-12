@@ -47,7 +47,6 @@ const gameOver = (hasEnded) => {
     const answer = document.createElement("p");
     if (hasEnded) {
       score.innerText = `You have won the game with ${tries} mistakes. \n CONGRATULATIONS!!!`;
-      //gameWindow.classList.add("hidden");
     } else {
       answer.innerText = `The answer was ${secretWord}`;
       score.innerText = `You have lost the game! \nTry to guess the word with less than ${maxMistakes} mistakes`;
