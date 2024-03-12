@@ -3,6 +3,7 @@ async function getWords() {
     "https://random-word-api.herokuapp.com/word?number=100"
   );
   const words = await response.json();
+
   for (const word of words) {
     if (word.length <= 5) {
       shortWords.push(word);
